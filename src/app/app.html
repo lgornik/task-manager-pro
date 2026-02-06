@@ -4,57 +4,55 @@
 
   <!-- Error message -->
   @if (error$ | async; as error) {
-    <div class="error">{{ error }}</div>
+  <div class="error">{{ error }}</div>
   }
 
   <!-- Loading indicator -->
   @if (loading$ | async) {
-    <div class="loading">Ładowanie...</div>
+  <div class="loading">Ładowanie...</div>
   }
 
   <!-- Add task form -->
   <div class="add-task">
-    <input
-      type="text"
-      [(ngModel)]="newTaskTitle"
-      placeholder="Nowe zadanie..."
-      (keyup.enter)="addTask()"
-    />
+    <input type="text" [(ngModel)]="newTaskTitle" placeholder="Nowe zadanie..." (keyup.enter)="addTask()" />
+
     <select [(ngModel)]="newTaskPriority">
       <option value="low">Niski</option>
       <option value="medium">Średni</option>
       <option value="high">Wysoki</option>
     </select>
+
+    <!-- NOWE: Wybór kategorii -->
+    <select [(ngModel)]="newTaskCategoryId">
+      <option [value]="null">Bez kategorii</option>
+      @for (category of categories$ | async; track category.id) {
+      <option [value]="category.id">
+        {{ category.icon }} {{ category.name }}
+      </option>
+      }
+    </select>
+
     <button (click)="addTask()">Dodaj</button>
   </div>
 
   <!-- Stats -->
   @if (count$ | async; as count) {
-    <div class="stats">
-      <span>Wszystkich: {{ count.total }}</span>
-      <span>Aktywnych: {{ count.active }}</span>
-      <span>Ukończonych: {{ count.completed }}</span>
-    </div>
+  <div class="stats">
+    <span>Wszystkich: {{ count.total }}</span>
+    <span>Aktywnych: {{ count.active }}</span>
+    <span>Ukończonych: {{ count.completed }}</span>
+  </div>
   }
 
   <!-- Filters -->
   <div class="filters">
-    <button
-      [class.active]="(filter$ | async) === 'all'"
-      (click)="setFilter('all')"
-    >
+    <button [class.active]="(filter$ | async) === 'all'" (click)="setFilter('all')">
       Wszystkie
     </button>
-    <button
-      [class.active]="(filter$ | async) === 'active'"
-      (click)="setFilter('active')"
-    >
+    <button [class.active]="(filter$ | async) === 'active'" (click)="setFilter('active')">
       Aktywne
     </button>
-    <button
-      [class.active]="(filter$ | async) === 'completed'"
-      (click)="setFilter('completed')"
-    >
+    <button [class.active]="(filter$ | async) === 'completed'" (click)="setFilter('completed')">
       Ukończone
     </button>
   </div>
@@ -62,24 +60,20 @@
   <!-- Task list -->
   <ul class="task-list">
     @for (task of tasks$ | async; track task.id) {
-      <li [class.completed]="task.completed">
-        <input
-          type="checkbox"
-          [checked]="task.completed"
-          (change)="toggleTask(task.id)"
-        />
-        <div class="task-content">
-          <span class="task-title">{{ task.title }}</span>
-          <span class="priority priority-{{ task.priority }}">
-            {{ task.priority }}
-          </span>
-        </div>
-        <button class="delete-btn" (click)="deleteTask(task.id)">
-          🗑️
-        </button>
-      </li>
+    <li [class.completed]="task.completed">
+      <input type="checkbox" [checked]="task.completed" (change)="toggleTask(task.id)" />
+      <div class="task-content">
+        <span class="task-title">{{ task.title }}</span>
+        <span class="priority priority-{{ task.priority }}">
+          {{ task.priority }}
+        </span>
+      </div>
+      <button class="delete-btn" (click)="deleteTask(task.id)">
+        🗑️
+      </button>
+    </li>
     } @empty {
-      <li class="empty">Brak zadań</li>
+    <li class="empty">Brak zadań</li>
     }
   </ul>
 

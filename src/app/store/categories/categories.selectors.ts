@@ -1,28 +1,39 @@
-// store/categories/categories.selectors.ts
+// src/app/store/categories/categories.selectors.ts
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { CategoriesState, categoriesAdapter } from './categories.state';
 
+// Feature selector
 export const selectCategoriesState = createFeatureSelector<CategoriesState>('categories');
 
-const { selectAll, selectEntities } = categoriesAdapter.getSelectors();
+// Entity adapter selectors
+const {
+  selectAll,
+  selectEntities,
+  selectIds,
+  selectTotal
+} = categoriesAdapter.getSelectors(selectCategoriesState);
 
-export const selectAllCategories = createSelector(
-  selectCategoriesState,
-  selectAll
-);
+// Export podstawowych selektorów
+export const selectAllCategories = selectAll;
+export const selectCategoryEntities = selectEntities;
+export const selectCategoryIds = selectIds;
+export const selectTotalCategories = selectTotal;
 
-export const selectCategoryEntities = createSelector(
-  selectCategoriesState,
-  selectEntities
-);
-
+// Selected category ID
 export const selectSelectedCategoryId = createSelector(
   selectCategoriesState,
   (state) => state.selectedCategoryId
 );
 
+// Selected category object
 export const selectSelectedCategory = createSelector(
   selectCategoryEntities,
   selectSelectedCategoryId,
   (entities, selectedId) => selectedId ? entities[selectedId] : null
+);
+
+// Category by ID
+export const selectCategoryById = (id: string) => createSelector(
+  selectCategoryEntities,
+  (entities) => entities[id]
 );

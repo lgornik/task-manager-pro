@@ -6,7 +6,7 @@ export interface Task {
   completed: boolean;
   createdAt: Date;
   priority: 'low' | 'medium' | 'high';
-  categoryId?: string;
   dueDate?: Date;
   tags?: string[];
+  categoryId: string | null;
 }

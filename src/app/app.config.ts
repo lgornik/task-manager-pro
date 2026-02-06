@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
@@ -7,14 +7,23 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { tasksReducer } from './store/tasks/tasks.reducer';
 import { TasksEffects } from './store/tasks/tasks.effects';
 import { routes } from './app.routes';
+import { categoriesReducer } from './store/categories/categories.reducer';
+import { CategoriesEffects } from './store/categories/categories.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(), // ← POPRAWIONA NAZWA
     provideRouter(routes),
     provideHttpClient(),
-    provideStore({ tasks: tasksReducer }),
-    provideEffects([TasksEffects]),
-    provideStoreDevtools({ maxAge: 25 })
+    provideStore({ 
+      tasks: tasksReducer,
+      categories: categoriesReducer
+    }),
+    provideEffects([TasksEffects, CategoriesEffects]),
+    provideStoreDevtools({ 
+      maxAge: 25,
+      logOnly: !isDevMode(), // ← DODANE
+      connectInZone: true 
+    })
   ]
 };

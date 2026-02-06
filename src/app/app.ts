@@ -1,4 +1,6 @@
 // src/app/app.component.ts
+import * as CategoriesActions from './store/categories/categories.actions';
+import { selectAllCategories } from './store/categories/categories.selectors';
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -28,12 +30,15 @@ export class App implements OnInit {
   loading$ = this.store.select(selectLoading);
   error$ = this.store.select(selectError);
   filter$ = this.store.select(selectFilter);
+  categories$ = this.store.select(selectAllCategories); // ← DODANE
 
   newTaskTitle = '';
   newTaskPriority: 'low' | 'medium' | 'high' = 'medium';
+  newTaskCategoryId: string | null = null; // ← DODANE
 
   ngOnInit() {
     this.store.dispatch(TasksActions.loadTasks());
+    this.store.dispatch(CategoriesActions.loadCategories()); // ← DODANE
   }
 
   addTask() {
@@ -43,11 +48,13 @@ export class App implements OnInit {
         description: '',
         completed: false,
         createdAt: new Date(),
-        priority: this.newTaskPriority
+        priority: this.newTaskPriority,
+        categoryId: this.newTaskCategoryId // ← UŻYWAMY WYBRANEJ KATEGORII
       };
 
       this.store.dispatch(TasksActions.addTaskRequest({ task }));
       this.newTaskTitle = '';
+      this.newTaskCategoryId = null; // ← RESET
     }
   }
 
