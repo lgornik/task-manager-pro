@@ -1,4 +1,3 @@
-// store/tasks/tasks.selectors.ts
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { TasksState, tasksAdapter } from './tasks.state';
 import { selectCategoryEntities } from '../categories/categories.selectors';

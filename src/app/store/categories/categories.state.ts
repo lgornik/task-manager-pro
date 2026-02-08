@@ -1,4 +1,3 @@
-// src/app/store/categories/categories.state.ts
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Category } from '../../models/category.model';
 

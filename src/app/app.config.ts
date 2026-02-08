@@ -12,7 +12,6 @@ import { CategoriesEffects } from './store/categories/categories.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZonelessChangeDetection(), // ← POPRAWIONA NAZWA
     provideRouter(routes),
     provideHttpClient(),
     provideStore({ 
@@ -22,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideEffects([TasksEffects, CategoriesEffects]),
     provideStoreDevtools({ 
       maxAge: 25,
-      logOnly: !isDevMode(), // ← DODANE
+      logOnly: !isDevMode(),
       connectInZone: true 
     })
   ]
