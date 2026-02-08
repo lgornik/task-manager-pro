@@ -8,9 +8,25 @@ export interface TasksState extends EntityState<Task> {
   selectedTaskId: string | null;
 }
 
+const priorityOrder: Record<'high' | 'medium' | 'low', number> = {
+  high: 3,
+  medium: 2,
+  low: 1
+};
+
 export const tasksAdapter: EntityAdapter<Task> = createEntityAdapter<Task>({
   selectId: (task: Task) => task.id,
-  sortComparer: false
+  sortComparer: (a, b) => {
+    // 1. Sortuj po priorytecie (high → medium → low)
+    const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
+    
+    if (priorityDiff !== 0) {
+      return priorityDiff;
+    }
+    
+    // 2. Jeśli priorytety są takie same, sortuj alfabetycznie po tytule
+    return a.title.localeCompare(b.title);
+  }
 });
 
 export const initialTasksState: TasksState = tasksAdapter.getInitialState({
